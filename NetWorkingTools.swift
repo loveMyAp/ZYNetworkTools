@@ -22,7 +22,7 @@ class NetWorkingTools: AFHTTPSessionManager {
        tools.responseSerializer.acceptableContentTypes?.insert("text/plain")
     
     */
-    static let sharedTools: NetWorkingTools = {
+    static var sharedTools: NetWorkingTools = {
         let tools = NetWorkingTools()
         tools.responseSerializer.acceptableContentTypes?.insert("text/plain")
         return tools
@@ -63,5 +63,35 @@ class NetWorkingTools: AFHTTPSessionManager {
             }
         }
     }
+    
+     //加载数组数据
+    func requestArray(requestMethod: HTTPMothod ,urlString: String,parameters: [String:AnyObject]?,finished:(result: [AnyObject]?,error: NSError?) -> ()){
+        
+        //调用AFN具体的 GET,POST方法
+        if requestMethod == HTTPMothod.GET{
+            NetWorkingTools.sharedTools.GET(urlString, parameters: parameters, success: { (_, result) -> Void in
+                if let dict = result as? [AnyObject] {
+                    finished(result: dict, error: nil)
+                }
+                let dateError = NSError(domain: Domain, code: -11000, userInfo: [NSLocalizedDescriptionKey:"数据加载错误"])
+                finished(result: nil, error: dateError)
+                }) { (_, error) -> Void in
+                    finished(result: nil, error: error)
+                    print(error)
+            }
+        }else if requestMethod == HTTPMothod.POST {
+            NetWorkingTools.sharedTools.GET(urlString, parameters: parameters, success: { (_, result) -> Void in
+                if let dict = result as? [AnyObject] {
+                    finished(result: dict, error: nil)
+                }
+                let dateError = NSError(domain: Domain, code: -11000, userInfo: [NSLocalizedDescriptionKey:"数据加载错误"])
+                finished(result: nil, error: dateError)
+                }) { (_, error) -> Void in
+                    finished(result: nil, error: error)
+                    print(error)
+            }
+        }
+    }
+
 
 }
