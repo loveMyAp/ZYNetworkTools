@@ -51,7 +51,7 @@ class NetWorkingTools: AFHTTPSessionManager {
                     print(error)
             }
         }else if requestMethod == HTTPMothod.POST {
-            NetWorkingTools.sharedTools.GET(urlString, parameters: parameters, success: { (_, result) -> Void in
+            NetWorkingTools.sharedTools.POST(urlString, parameters: parameters, success: { (_, result) -> Void in
                 if let dict = result as? [String:AnyObject] {
                     finished(result: dict, error: nil)
                 }
@@ -80,7 +80,7 @@ class NetWorkingTools: AFHTTPSessionManager {
                     print(error)
             }
         }else if requestMethod == HTTPMothod.POST {
-            NetWorkingTools.sharedTools.GET(urlString, parameters: parameters, success: { (_, result) -> Void in
+            NetWorkingTools.sharedTools.POST(urlString, parameters: parameters, success: { (_, result) -> Void in
                 if let dict = result as? [AnyObject] {
                     finished(result: dict, error: nil)
                 }
@@ -90,6 +90,28 @@ class NetWorkingTools: AFHTTPSessionManager {
                     finished(result: nil, error: error)
                     print(error)
             }
+        }
+    }
+    
+    
+    //添加上传图片的方法
+    func uploadImage(urlString: String,parmaters: [String : AnyObject]?,imageData: NSData,finished: (result: [String : AnyObject]?, error: NSError?) -> ()) {
+        
+        POST(urlString, parameters: parmaters, constructingBodyWithBlock: { (multipartFormData) -> Void in
+            
+            //1.data  要上传的文件的二进制数据
+            //2.name 表示上传的文件服务器对应的字段
+            //3.filename 表示服务器接受后 存储的名字   名字可以随便取
+            //4.上传文件的格式  image/jpeg
+            multipartFormData.appendPartWithFileData(imageData, name: "pic", fileName: "OMG", mimeType: "image/jpeg")
+            }, success: { (_, result) -> Void in
+                if let dict = result as? [String : AnyObject] {
+                    finished(result: dict, error: nil)
+                }
+                
+            }) { (_, error) -> Void in
+                finished(result: nil, error: error)
+                print(error)
         }
     }
 
